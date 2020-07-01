@@ -10,6 +10,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * ContextClosedEvent 수신시 tomcat에서 new request를 수신하지 않도록 한 후 대기
+ */
 @Slf4j
 public class TaskExecutorGracefulShutdownHandler implements ApplicationListener<ContextClosedEvent> {
 
