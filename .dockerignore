@@ -1,0 +1,7 @@
+*.md
+
+.dockerignore
+.git
+.gitignore
+.gradle
+.idea
