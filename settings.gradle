@@ -1,0 +1,4 @@
+rootProject.name = 'graceful-shutdown-demo'
+
+include 'spring-actuator'
+include 'spring-boot-2_3_x'
