@@ -33,7 +33,7 @@ if [ -z "${PORT}" ]; then
 fi
 
 echo -n "Rebuild the app before launching it? [y/n]? "
-read answer
+read -r answer
 
 if [ "${answer}" == "y" ] || [ "${answer}" == "Y" ]; then
   echo "Building the app..."
@@ -63,4 +63,4 @@ echo "Launching the app... version=${VERSION}"
 echo ""
 
 # run app
-docker run -p ${PORT}:8080 opklnm102/${MODULE_NAME}:${VERSION}
+docker run -p ${PORT}:8080 opklnm102/"${MODULE_NAME}":"${VERSION}"

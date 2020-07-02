@@ -24,7 +24,7 @@ MODULE_NAME=$(basename $(cd $(dirname "$0") && pwd))
 
 echo "build image... version=${VERSION}"
 
-docker build --build-arg VERSION=${VERSION} \
-             --build-arg MODULE_NAME=${MODULE_NAME} \
-             -t opklnm102/${MODULE_NAME}:${VERSION} \
-             -f ${REPOSITORY_ROOT}/${MODULE_NAME}/Dockerfile ${REPOSITORY_ROOT}
+docker build --build-arg VERSION="${VERSION}" \
+             --build-arg MODULE_NAME="${MODULE_NAME}" \
+             -t opklnm102/"${MODULE_NAME}":"${VERSION}" \
+             -f "${REPOSITORY_ROOT}"/"${MODULE_NAME}"/Dockerfile "${REPOSITORY_ROOT}"

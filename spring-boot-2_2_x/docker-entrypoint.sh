@@ -14,4 +14,4 @@ export JAVA_OPTS="${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -Dfile.en
 
 echo "java ${JAVA_OPTS} -jar app.jar"
 
-exec java ${JAVA_OPTS} -jar app.jar
+exec java "${JAVA_OPTS}" -jar app.jar
