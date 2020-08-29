@@ -16,9 +16,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class TomcatConnectorGracefulShutdownHandler implements TomcatConnectorCustomizer, ApplicationListener<ContextClosedEvent> {
 
-    private static final int TIMEOUT = 60;
-
     private volatile Connector connector;
+
+    private final long timeout;
+
+    public TomcatConnectorGracefulShutdownHandler(long timeout) {
+        this.timeout = timeout;
+    }
 
     @Override
     public void customize(Connector connector) {
@@ -36,12 +40,12 @@ public class TomcatConnectorGracefulShutdownHandler implements TomcatConnectorCu
             threadPoolExecutor.shutdown();
 
             try {
-                if(!threadPoolExecutor.awaitTermination(TIMEOUT, TimeUnit.SECONDS)) {
-                    log.warn("Tomcat thread pool did not shutdown gracefully within {} seconds. Proceeding with forceful shutdown", TIMEOUT);
+                if(!threadPoolExecutor.awaitTermination(timeout, TimeUnit.SECONDS)) {
+                    log.warn("Tomcat thread pool did not shutdown gracefully within {} seconds. Proceeding with forceful shutdown", timeout);
 
                     threadPoolExecutor.shutdownNow();
 
-                    if(!threadPoolExecutor.awaitTermination(TIMEOUT, TimeUnit.SECONDS)) {
+                    if(!threadPoolExecutor.awaitTermination(timeout, TimeUnit.SECONDS)) {
                         log.error("Tomcat thread pool did not terminate");
                     }
                 }

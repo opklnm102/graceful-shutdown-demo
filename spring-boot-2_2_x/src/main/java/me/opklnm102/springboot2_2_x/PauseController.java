@@ -21,14 +21,18 @@ public class PauseController {
 
     @GetMapping(path = "/pause")
     public String pause() {
-        CompletableFuture.runAsync(new LongTask(), executor);
-
         try {
             TimeUnit.SECONDS.sleep(15);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        return "ok";
+    }
+
+    @GetMapping(path = "/task")
+    public String task() {
+        CompletableFuture.runAsync(new LongTask(), executor);
         return "ok";
     }
 

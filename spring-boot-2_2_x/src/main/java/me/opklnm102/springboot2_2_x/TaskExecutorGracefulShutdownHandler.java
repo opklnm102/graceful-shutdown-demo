@@ -16,12 +16,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class TaskExecutorGracefulShutdownHandler implements ApplicationListener<ContextClosedEvent> {
 
-    private static final int TIMEOUT = 60;
-
     private final List<Executor> executors;
 
-    public TaskExecutorGracefulShutdownHandler(List<Executor> executors) {
+    private final long timeout;
+
+    public TaskExecutorGracefulShutdownHandler(List<Executor> executors, long timeout) {
         this.executors = executors;
+        this.timeout = timeout;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class TaskExecutorGracefulShutdownHandler implements ApplicationListener<
         log.info("graceful shutdown...");
 
         try {
-            TimeUnit.SECONDS.sleep(TIMEOUT);
+            TimeUnit.SECONDS.sleep(timeout);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
