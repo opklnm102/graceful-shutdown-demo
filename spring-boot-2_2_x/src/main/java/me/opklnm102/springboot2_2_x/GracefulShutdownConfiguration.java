@@ -9,17 +9,16 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+@Profile(value = "graceful")
 @Configuration
 @EnableConfigurationProperties(value = GracefulShutdownProperties.class)
 public class GracefulShutdownConfiguration {
 
-    @Profile(value = "graceful")
     @Bean
     public TomcatConnectorGracefulShutdownHandler tomcatConnectorGracefulShutdownHandler(GracefulShutdownProperties gracefulShutdownProperties) {
         return new TomcatConnectorGracefulShutdownHandler(gracefulShutdownProperties.getTimeout().toSeconds());
     }
 
-    @Profile(value = "graceful")
     @Bean
     public TaskExecutorGracefulShutdownHandler taskExecutorGracefulShutdownHandler(List<Executor> executors, GracefulShutdownProperties gracefulShutdownProperties) {
         return new TaskExecutorGracefulShutdownHandler(executors, gracefulShutdownProperties.getTimeout().toSeconds());

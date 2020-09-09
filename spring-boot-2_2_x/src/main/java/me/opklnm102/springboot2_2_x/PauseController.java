@@ -61,6 +61,8 @@ public class PauseController {
                     break;
                 }
             }
+
+            log.info("done task...");
         }
     }
 }

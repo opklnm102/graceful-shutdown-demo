@@ -1,6 +1,7 @@
 package me.opklnm102.springboot2_3_x;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,20 +15,24 @@ public class PauseController {
 
     private ExecutorService executor;
 
-    public PauseController() {
-        executor = Executors.newFixedThreadPool(10);
+    public PauseController(ThreadPoolTaskExecutor taskExecutor) {
+        executor = Executors.newFixedThreadPool(10, taskExecutor);
     }
 
     @GetMapping(path = "/pause")
     public String pause() {
-        CompletableFuture.runAsync(new LongTask(), executor);
-
         try {
             TimeUnit.SECONDS.sleep(15);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        return "ok";
+    }
+
+    @GetMapping(path = "/task")
+    public String task() {
+        CompletableFuture.runAsync(new LongTask(), executor);
         return "ok";
     }
 
@@ -56,6 +61,8 @@ public class PauseController {
                     break;
                 }
             }
+
+            log.info("done task...");
         }
     }
 }

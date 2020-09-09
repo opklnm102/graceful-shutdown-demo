@@ -29,31 +29,44 @@ public class SpringWebFluxApplication {
         return route(GET("/pause")
                         .and(accept(MediaType.TEXT_PLAIN))
                 , request -> {
-                    log.info("pause");
-
-                    for (int i = 0; i < 2; i++) {
-                        CompletableFuture.runAsync(() -> {
-                            // asynchronous
-                            try {
-                                log.info("doing task...");
-                                TimeUnit.SECONDS.sleep(20);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            log.info("done task...");
-                        });
-                    }
-
-                    // 10s 처리되는 작업
                     try {
-                        TimeUnit.SECONDS.sleep(10);
+                        TimeUnit.SECONDS.sleep(15);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
                     return ServerResponse.ok().contentType(MediaType.TEXT_PLAIN)
                                          .body(BodyInserters.fromValue("ok"));
-                });
+                })
+                .andRoute(GET("/task")
+                                .and(accept(MediaType.TEXT_PLAIN))
+                        , request -> {
+
+                            CompletableFuture.runAsync(() -> {
+                                var next = true;
+                                var maxCount = 10;
+                                var count = 0;
+
+                                while (!Thread.currentThread().isInterrupted() && next) {
+                                    try {
+                                        log.info("doing task... count: {}", count);
+                                        TimeUnit.SECONDS.sleep(3);
+
+                                        count++;
+                                        if (count > maxCount) {
+                                            next = false;
+                                        }
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                        break;
+                                    }
+                                }
+
+                                log.info("done task...");
+                            });
+
+                            return ServerResponse.ok().contentType(MediaType.TEXT_PLAIN)
+                                                 .body(BodyInserters.fromValue("ok"));
+                        });
     }
 }
