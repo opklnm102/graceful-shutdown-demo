@@ -2,11 +2,8 @@ package me.opklnm102.springboot2_3_x;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.SmartLifecycle;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -15,14 +12,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class TaskExecutorGracefulShutdownLifecycle implements SmartLifecycle {
 
-    private final List<Executor> executors;
-
-    private final long timeout;
+    private final Duration timeout;
 
     private volatile boolean running;
 
-    public TaskExecutorGracefulShutdownLifecycle(List<Executor> executors, long timeout) {
-        this.executors = executors;
+    public TaskExecutorGracefulShutdownLifecycle(Duration timeout) {
         this.timeout = timeout;
     }
 
@@ -59,19 +53,9 @@ public class TaskExecutorGracefulShutdownLifecycle implements SmartLifecycle {
         log.info("Commencing graceful shutdown. Waiting for active task to complete");
 
         try {
-            TimeUnit.SECONDS.sleep(timeout);
+            TimeUnit.SECONDS.sleep(timeout.toSeconds());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-        }
-
-        for (Executor executor : executors) {
-            if (executor instanceof ThreadPoolTaskExecutor) {
-                ((ThreadPoolTaskExecutor) executor).shutdown();
-            }
-            if (executor instanceof ThreadPoolExecutor) {
-                ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executor;
-                threadPoolExecutor.shutdown();
-            }
         }
 
         log.info("Graceful shutdown complete");
